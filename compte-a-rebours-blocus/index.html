@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="fr-BE">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compte à rebours blocus et examens – combien de jours il te reste | KotPlan</title>
+<meta name="description" content="Entre tes dates d'examen : vois combien de jours il te reste avant chacun, et combien d'heures de révision tu as vraiment pendant ton blocus.">
+<link rel="canonical" href="https://kotplancontact-gif.github.io/compte-a-rebours-blocus/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="site-head"><div class="wrap">
+  <a class="brand" href="../">KotPlan</a>
+  <nav aria-label="Outils"><a href="../moyenne-ponderee/">Moyenne pondérée</a><a href="../note-examen/">Note à l'examen</a></nav>
+</div></header>
+
+<main><div class="wrap">
+  <h1>Combien de jours avant tes examens ?</h1>
+  <p class="lede">Entre tes examens et leurs dates. Tu vois le temps qu'il te reste pour chacun, et le nombre d'heures de révision dont tu disposes vraiment.</p>
+
+  <form class="tool" id="form" novalidate>
+    <div class="rows" id="rows"></div>
+    <div class="actions"><button type="button" class="btn-ghost" id="add">Ajouter un examen</button></div>
+    <div class="rows" style="margin-top:16px">
+      <div class="row two">
+        <div><label for="hours">Heures de révision par jour</label><input id="hours" inputmode="decimal" value="8"></div>
+      </div>
+    </div>
+    <div class="actions"><button type="submit" class="btn">Voir mon compte à rebours</button></div>
+  </form>
+
+  <section class="result" id="result" hidden aria-live="polite">
+    <span class="big" id="first"></span>
+    <p id="summary"></p>
+    <ul class="countdown" id="list"></ul>
+  </section>
+  <p class="error" id="error" role="alert" hidden></p>
+
+  <aside class="kit">
+    <p>Tu connais ton temps disponible. Le Kit Blocus le répartit pour toi, jour par jour, entre tous tes cours.</p>
+    <a data-kit href="#">Voir le Kit Blocus</a>
+  </aside>
+
+  <h2>Comment le temps est compté</h2>
+  <p>Les jours sont comptés à partir d'aujourd'hui. Les heures disponibles excluent les jours d'examen eux-mêmes : ce jour-là, on passe l'examen, on ne révise pas.</p>
+</div></main>
+
+<footer class="site-foot"><div class="wrap">
+  <p>KotPlan · outils gratuits pour étudiants · <span data-year></span></p>
+  <p>Tes dates restent dans ton navigateur. Rien n'est envoyé.</p>
+</div></footer>
+
+<template id="row-tpl">
+  <div class="row date">
+    <div class="course"><label>Examen</label><input name="nom" autocomplete="off" placeholder="Ex. Analyse mathématique"></div>
+    <div><label>Date</label><input name="date" type="date"></div>
+    <button type="button" class="btn-remove" aria-label="Retirer cet examen">×</button>
+  </div>
+</template>
+
+<script src="../assets/site.js"></script>
+<script>
+const rowsEl = document.getElementById("rows");
+const tpl = document.getElementById("row-tpl");
+const KEY = "kotplan-examens";
+const DAY = 86400000;
+
+function addRow(v = {}) {
+  const node = tpl.content.firstElementChild.cloneNode(true);
+  const n = rowsEl.children.length;
+  node.querySelectorAll("input").forEach((inp) => {
+    inp.id = `${inp.name}-${n}-${Date.now()}`;
+    inp.previousElementSibling.htmlFor = inp.id;
+    inp.value = v[inp.name] ?? "";
+  });
+  node.querySelector(".btn-remove").addEventListener("click", () => {
+    if (rowsEl.children.length > 1) node.remove(); else node.querySelectorAll("input").forEach((i) => (i.value = ""));
+    save();
+  });
+  rowsEl.appendChild(node);
+}
+function readRows() {
+  return [...rowsEl.children].map((r) => ({
+    nom: r.querySelector('[name="nom"]').value.trim(),
+    date: r.querySelector('[name="date"]').value,
+  }));
+}
+function save() { store.set(KEY, readRows()); }
+
+const saved = store.get(KEY);
+(Array.isArray(saved) && saved.length ? saved : [{}, {}, {}]).forEach(addRow);
+document.getElementById("add").addEventListener("click", () => { addRow(); save(); });
+rowsEl.addEventListener("input", save);
+
+// Date locale à minuit, sans décalage de fuseau.
+function localDay(iso) { const [y, m, d] = iso.split("-").map(Number); return new Date(y, m - 1, d); }
+function plural(n, s) { return `${n} ${s}${n > 1 ? "s" : ""}`; }
+
+document.getElementById("form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const err = document.getElementById("error"), res = document.getElementById("result");
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const hours = parseNum(document.getElementById("hours").value);
+  const exams = readRows().filter((x) => x.date).map((x, i) => ({
+    nom: x.nom || `Examen ${i + 1}`, day: localDay(x.date),
+  })).filter((x) => x.day >= today).sort((a, b) => a.day - b.day);
+  document.getElementById("hours").toggleAttribute("aria-invalid", !(hours > 0 && hours <= 16));
+  if (!exams.length || !(hours > 0 && hours <= 16)) {
+    res.hidden = true; err.hidden = false;
+    err.textContent = !exams.length
+      ? "Entre au moins un examen avec une date à venir."
+      : "Les heures par jour doivent être comprises entre 1 et 16.";
+    return;
+  }
+  err.hidden = true;
+  const daysTo = (d) => Math.round((d - today) / DAY);
+  const examDays = new Set(exams.map((x) => x.day.getTime()));
+  const last = exams[exams.length - 1].day;
+  let studyDays = 0;
+  for (let t = today.getTime(); t < last.getTime(); t += DAY) {
+    const d = new Date(t); d.setHours(0, 0, 0, 0);
+    if (!examDays.has(d.getTime())) studyDays++;
+  }
+  const first = daysTo(exams[0].day);
+  const big = document.getElementById("first");
+  big.innerHTML = first === 0 ? "Aujourd'hui" : `J−${first}`;
+  big.classList.toggle("fail", first <= 3);
+  document.getElementById("summary").textContent =
+    `${first === 0 ? "Ton premier examen, c'est aujourd'hui." : `Premier examen dans ${plural(first, "jour")}.`} ` +
+    `D'ici le dernier, tu as ${plural(studyDays, "jour")} de révision, soit environ ${fmt(studyDays * hours, 0)} heures.`;
+  const dateFmt = { weekday: "long", day: "numeric", month: "long" };
+  document.getElementById("list").innerHTML = exams.map((x) => {
+    const n = daysTo(x.day);
+    const esc = x.nom.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    return `<li class="${n <= 3 ? "soon" : ""}"><span>${esc}<br><small>${x.day.toLocaleDateString("fr-BE", dateFmt)}</small></span>` +
+      `<span class="days">${n === 0 ? "aujourd'hui" : plural(n, "jour")}</span></li>`;
+  }).join("");
+  res.hidden = false;
+  swipe(big);
+});
+</script>
+</body>
+</html>

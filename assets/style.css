@@ -1,0 +1,173 @@
+/* KotPlan outils — feuille quadrillée, encre bleue, surligneur, stylo rouge */
+:root {
+  --paper: #fbfcfe;
+  --grid: #e1e9f4;
+  --ink: #1b3a8c;
+  --text: #1a1f2b;
+  --muted: #5b6475;
+  --hl: #ffe94d;
+  --red: #c8312b;
+  --line: #c9d5e6;
+  --field: #ffffff;
+  --radius: 6px;
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #141a26;
+    --grid: #1e2636;
+    --ink: #8fb0ff;
+    --text: #e8ecf4;
+    --muted: #a3acbd;
+    --hl: #b9a400;
+    --red: #ff7b72;
+    --line: #34405a;
+    --field: #1a2130;
+    color-scheme: dark;
+  }
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 22px 22px;
+  color: var(--text);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+}
+
+a { color: var(--ink); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.wrap { max-width: 44rem; margin: 0 auto; padding: 0 16px; }
+
+/* En-tête : une marge de cahier rouge à gauche */
+.site-head { padding: 20px 0 8px; }
+.site-head .wrap { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+.brand { font-weight: 800; font-size: 1.25rem; color: var(--ink); text-decoration: none; letter-spacing: -0.01em; }
+.site-head nav a { color: var(--muted); font-size: 0.95rem; margin-left: 14px; }
+
+main { padding: 24px 0 56px; }
+main .wrap { border-left: 2px solid color-mix(in srgb, var(--red) 55%, transparent); padding-left: 22px; }
+@media (max-width: 520px) { main .wrap { border-left: 0; padding-left: 16px; } }
+
+h1 {
+  font-size: clamp(2rem, 6vw, 3rem);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  font-weight: 800;
+  margin: 0 0 12px;
+  color: var(--ink);
+}
+h2 { font-size: 1.35rem; letter-spacing: -0.01em; margin: 40px 0 8px; }
+.lede { font-size: 1.15rem; color: var(--muted); margin: 0 0 28px; max-width: 36rem; }
+
+/* Formulaires */
+.tool { margin: 8px 0 0; }
+.rows { display: grid; gap: 10px; }
+.row { display: grid; grid-template-columns: 1fr 6.5rem 6.5rem 2.5rem; gap: 8px; align-items: end; }
+.row.two { grid-template-columns: 1fr 1fr; }
+.row.date { grid-template-columns: 1fr 11rem 2.5rem; }
+@media (max-width: 520px) {
+  .row { grid-template-columns: 1fr 1fr 2.5rem; }
+  .row .course { grid-column: 1 / -1; }
+  .row.date { grid-template-columns: 1fr 2.5rem; }
+  .row.date .course { grid-column: 1 / -1; }
+}
+label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 4px; }
+input {
+  width: 100%;
+  font: inherit;
+  font-size: 1.05rem;
+  padding: 10px 12px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--field);
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+input:focus { border-color: var(--ink); }
+input[aria-invalid="true"] { border-color: var(--red); }
+
+button {
+  font: inherit;
+  font-weight: 700;
+  border-radius: var(--radius);
+  cursor: pointer;
+  border: 0;
+}
+.btn { background: var(--ink); color: var(--paper); padding: 12px 20px; font-size: 1.05rem; }
+.btn-ghost { background: transparent; color: var(--ink); padding: 10px 4px; text-decoration: underline; text-underline-offset: 3px; }
+.btn-remove { background: transparent; color: var(--muted); font-size: 1.4rem; line-height: 1; height: 46px; }
+.btn-remove:hover { color: var(--red); }
+.actions { display: flex; gap: 16px; align-items: center; margin: 16px 0 0; flex-wrap: wrap; }
+
+/* Résultat : le moment surligné */
+.result { margin: 32px 0 0; min-height: 4rem; }
+.result[hidden] { display: none; }
+.big {
+  font-size: clamp(3rem, 14vw, 5.5rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  display: inline;
+  color: var(--text);
+  background-image: linear-gradient(transparent 52%, var(--hl) 52%, var(--hl) 92%, transparent 92%);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  padding: 0 0.08em;
+}
+.big.fail { color: var(--red); }
+.big .unit { font-size: 0.4em; font-weight: 600; letter-spacing: 0; color: var(--muted); }
+.big.swipe { animation: swipe 520ms cubic-bezier(.3,.7,.2,1) both; }
+@keyframes swipe { from { background-size: 0% 100%; } to { background-size: 100% 100%; } }
+@media (prefers-reduced-motion: reduce) { .big.swipe { animation: none; } }
+.result p { margin: 14px 0 0; }
+.facts { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 4px; }
+.facts strong { font-variant-numeric: tabular-nums; }
+.error { color: var(--red); font-weight: 600; margin: 12px 0 0; }
+
+/* Liste des examens (compte à rebours) */
+.countdown { list-style: none; padding: 0; margin: 16px 0 0; }
+.countdown li { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px dashed var(--line); }
+.countdown .days { font-weight: 800; font-variant-numeric: tabular-nums; color: var(--ink); white-space: nowrap; }
+.countdown .soon .days { color: var(--red); }
+
+/* Renvoi vers le kit : une note collée dans la marge */
+.kit {
+  margin: 44px 0 0;
+  padding: 18px 20px;
+  background: color-mix(in srgb, var(--hl) 38%, var(--paper));
+  border-radius: 2px;
+  transform: rotate(-0.6deg);
+  max-width: 34rem;
+  box-shadow: 0 1px 0 var(--line);
+}
+.kit p { margin: 0 0 10px; }
+.kit a { font-weight: 700; }
+@media (prefers-reduced-motion: reduce) { .kit { transform: none; } }
+
+/* Accueil : sommaire des outils */
+.toc { list-style: none; padding: 0; margin: 8px 0 0; }
+.toc li { padding: 18px 0; border-bottom: 1px solid var(--line); }
+.toc a { font-size: 1.35rem; font-weight: 700; text-decoration: none; }
+.toc a:hover { text-decoration: underline; }
+.toc p { margin: 4px 0 0; color: var(--muted); }
+
+/* FAQ */
+details { border-bottom: 1px solid var(--line); padding: 12px 0; }
+summary { cursor: pointer; font-weight: 700; }
+details p { margin: 8px 0 0; color: var(--muted); }
+
+.site-foot { padding: 28px 0 40px; color: var(--muted); font-size: 0.9rem; }
+.site-foot p { margin: 4px 0; }

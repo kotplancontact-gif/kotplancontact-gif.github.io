@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://kotplancontact-gif.github.io/sitemap.xml

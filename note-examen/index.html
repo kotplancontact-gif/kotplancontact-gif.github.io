@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="fr-BE">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quelle note me faut-il à l'examen ? Calculateur gratuit | KotPlan</title>
+<meta name="description" content="Tu connais ta note de travaux ou de partiel ? Calcule la note minimale à obtenir à l'examen pour réussir (10/20) ou atteindre ton objectif.">
+<link rel="canonical" href="https://kotplancontact-gif.github.io/note-examen/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Comment calculer la note nécessaire à l'examen ?","acceptedAnswer":{"@type":"Answer","text":"Note nécessaire = (note visée − poids des travaux × note des travaux) ÷ poids de l'examen. Les poids sont exprimés en fraction (40 % = 0,4)."}},
+{"@type":"Question","name":"Et si le résultat dépasse 20 ?","acceptedAnswer":{"@type":"Answer","text":"Alors l'objectif n'est plus atteignable avec cet examen seul. Vise un objectif plus bas ou renseigne-toi sur la seconde session."}}]}
+</script>
+</head>
+<body>
+<header class="site-head"><div class="wrap">
+  <a class="brand" href="../">KotPlan</a>
+  <nav aria-label="Outils"><a href="../moyenne-ponderee/">Moyenne pondérée</a><a href="../compte-a-rebours-blocus/">Compte à rebours</a></nav>
+</div></header>
+
+<main><div class="wrap">
+  <h1>Quelle note te faut-il à l'examen ?</h1>
+  <p class="lede">Tu connais déjà ta note de travaux, de labo ou de partiel. Indique combien elle compte, et vois tout de suite le minimum à viser le jour de l'examen.</p>
+
+  <form class="tool" id="form" novalidate>
+    <div class="rows">
+      <div class="row two">
+        <div><label for="known">Note déjà obtenue (/20)</label><input id="known" inputmode="decimal" placeholder="12"></div>
+        <div><label for="weight">Elle compte pour (%)</label><input id="weight" inputmode="decimal" placeholder="30"></div>
+      </div>
+      <div class="row two">
+        <div><label for="target">Note finale visée (/20)</label><input id="target" inputmode="decimal" value="10"></div>
+      </div>
+    </div>
+    <div class="actions"><button type="submit" class="btn">Calculer la note à viser</button></div>
+  </form>
+
+  <section class="result" id="result" hidden aria-live="polite">
+    <span class="big" id="need"></span>
+    <p id="msg"></p>
+  </section>
+  <p class="error" id="error" role="alert" hidden></p>
+
+  <aside class="kit">
+    <p>Maintenant que tu connais ta cible, organise tes révisions : le Kit Blocus répartit tes heures selon la difficulté et la date de chaque examen.</p>
+    <a data-kit href="#">Voir le Kit Blocus</a>
+  </aside>
+
+  <h2>La formule</h2>
+  <p>Note à l'examen = (note visée − poids des travaux × note des travaux) ÷ poids de l'examen.</p>
+  <p>Exemple : 12/20 aux travaux qui comptent pour 30 %. Pour finir à 10/20, il faut (10 − 0,3 × 12) ÷ 0,7 = 9,14/20 à l'examen.</p>
+
+  <h2>Questions fréquentes</h2>
+  <details><summary>Et si le résultat dépasse 20 ?</summary>
+    <p>L'objectif n'est plus atteignable avec cet examen seul. Vise un objectif plus bas, ou renseigne-toi sur la seconde session.</p></details>
+  <details><summary>Mon cours a plusieurs travaux.</summary>
+    <p>Fais d'abord la moyenne de tes travaux (en tenant compte de leurs poids), puis entre ce total et son pourcentage global.</p></details>
+</div></main>
+
+<footer class="site-foot"><div class="wrap">
+  <p>KotPlan · outils gratuits pour étudiants · <span data-year></span></p>
+  <p>Résultat indicatif : vérifie la pondération exacte dans ta fiche de cours.</p>
+</div></footer>
+
+<script src="../assets/site.js"></script>
+<script>
+document.getElementById("form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const ids = ["known", "weight", "target"];
+  const [known, weight, target] = ids.map((id) => parseNum(document.getElementById(id).value));
+  const checks = { known: known >= 0 && known <= 20, weight: weight > 0 && weight < 100, target: target > 0 && target <= 20 };
+  ids.forEach((id) => document.getElementById(id).toggleAttribute("aria-invalid", !checks[id]));
+  const err = document.getElementById("error"), res = document.getElementById("result");
+  if (!Object.values(checks).every(Boolean)) {
+    res.hidden = true; err.hidden = false;
+    err.textContent = "Les notes vont de 0 à 20 et le pourcentage doit être compris entre 1 et 99. Corrige les cases en rouge.";
+    return;
+  }
+  err.hidden = true;
+  const w = weight / 100;
+  const need = (target - w * known) / (1 - w);
+  const big = document.getElementById("need"), msg = document.getElementById("msg");
+  if (need <= 0) {
+    big.innerHTML = `0<span class="unit"> /20</span>`;
+    big.classList.remove("fail");
+    msg.textContent = `Ton objectif de ${fmt(target)}/20 est déjà assuré grâce à ta note de ${fmt(known)}/20.`;
+  } else if (need > 20) {
+    big.innerHTML = `${fmt(need, 1)}<span class="unit"> /20</span>`;
+    big.classList.add("fail");
+    const max = w * known + (1 - w) * 20;
+    msg.textContent = `Ce n'est plus atteignable : même avec 20/20 à l'examen, tu finirais à ${fmt(max)}/20.`;
+  } else {
+    big.innerHTML = `${fmt(need, 2)}<span class="unit"> /20</span>`;
+    big.classList.remove("fail");
+    msg.textContent = `C'est le minimum à obtenir à l'examen (qui compte pour ${fmt(100 - weight)} %) pour finir à ${fmt(target)}/20.`;
+  }
+  res.hidden = false;
+  swipe(big);
+});
+</script>
+</body>
+</html>

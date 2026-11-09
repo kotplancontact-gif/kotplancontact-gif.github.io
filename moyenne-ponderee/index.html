@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="fr-BE">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calcul de moyenne pondérée par crédits (ECTS) – gratuit | KotPlan</title>
+<meta name="description" content="Calcule ta moyenne pondérée sur 20 selon les crédits ECTS de chaque cours, et vois combien de crédits tu valides. Gratuit, sans inscription.">
+<link rel="canonical" href="https://kotplancontact-gif.github.io/moyenne-ponderee/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Comment calculer une moyenne pondérée par crédits ?","acceptedAnswer":{"@type":"Answer","text":"Multiplie chaque note par le nombre de crédits du cours, additionne ces produits, puis divise par le total des crédits."}},
+{"@type":"Question","name":"À partir de quelle note un cours est-il réussi ?","acceptedAnswer":{"@type":"Answer","text":"En Fédération Wallonie-Bruxelles, les crédits d'un cours sont acquis à partir de 10/20."}},
+{"@type":"Question","name":"Mes notes sont-elles enregistrées ?","acceptedAnswer":{"@type":"Answer","text":"Elles restent uniquement dans ton navigateur, sur ton appareil. Rien n'est envoyé."}}]}
+</script>
+</head>
+<body>
+<header class="site-head"><div class="wrap">
+  <a class="brand" href="../">KotPlan</a>
+  <nav aria-label="Outils"><a href="../note-examen/">Note à l'examen</a><a href="../compte-a-rebours-blocus/">Compte à rebours</a></nav>
+</div></header>
+
+<main><div class="wrap">
+  <h1>Ta moyenne pondérée, cours par cours</h1>
+  <p class="lede">Entre ta note sur 20 et le nombre de crédits de chaque cours. La moyenne tient compte du poids de chaque cours, comme sur ton relevé de notes.</p>
+
+  <form class="tool" id="form" novalidate>
+    <div class="rows" id="rows"></div>
+    <div class="actions">
+      <button type="button" class="btn-ghost" id="add">Ajouter un cours</button>
+    </div>
+    <div class="actions">
+      <button type="submit" class="btn">Calculer ma moyenne</button>
+    </div>
+  </form>
+
+  <section class="result" id="result" hidden aria-live="polite">
+    <span class="big" id="avg"></span>
+    <ul class="facts" id="facts"></ul>
+  </section>
+  <p class="error" id="error" role="alert" hidden></p>
+
+  <aside class="kit">
+    <p>Tu prépares ta session ? Le Kit Blocus construit tout ton planning de révisions à partir de tes dates d'examen.</p>
+    <a data-kit href="#">Voir le Kit Blocus</a>
+  </aside>
+
+  <h2>Comment la moyenne est calculée</h2>
+  <p>Chaque note est multipliée par les crédits du cours, puis la somme est divisée par le total des crédits. Un cours de 10 crédits pèse donc deux fois plus qu'un cours de 5 crédits.</p>
+  <p>Exemple : 12/20 dans un cours de 5 crédits et 15/20 dans un cours de 10 crédits donnent (12 × 5 + 15 × 10) ÷ 15 = 14/20.</p>
+
+  <h2>Questions fréquentes</h2>
+  <details><summary>À partir de quelle note un cours est-il réussi ?</summary>
+    <p>En Fédération Wallonie-Bruxelles, les crédits d'un cours sont acquis à partir de 10/20. Vérifie le règlement des études de ton établissement pour les règles de délibération.</p></details>
+  <details><summary>Je peux mettre des demi-points ?</summary>
+    <p>Oui : 13,5 ou 13.5 fonctionnent tous les deux.</p></details>
+  <details><summary>Mes notes sont-elles enregistrées ?</summary>
+    <p>Elles restent uniquement dans ton navigateur, sur ton appareil. Rien n'est envoyé.</p></details>
+</div></main>
+
+<footer class="site-foot"><div class="wrap">
+  <p>KotPlan · outils gratuits pour étudiants · <span data-year></span></p>
+  <p>Résultat indicatif : seul ton relevé officiel fait foi.</p>
+</div></footer>
+
+<template id="row-tpl">
+  <div class="row">
+    <div class="course"><label>Cours</label><input name="nom" autocomplete="off" placeholder="Ex. Chimie générale"></div>
+    <div><label>Note /20</label><input name="note" inputmode="decimal" placeholder="13,5"></div>
+    <div><label>Crédits</label><input name="ects" inputmode="decimal" placeholder="5"></div>
+    <button type="button" class="btn-remove" aria-label="Retirer ce cours">×</button>
+  </div>
+</template>
+
+<script src="../assets/site.js"></script>
+<script>
+const rowsEl = document.getElementById("rows");
+const tpl = document.getElementById("row-tpl");
+const KEY = "kotplan-moyenne";
+
+function addRow(v = {}) {
+  const node = tpl.content.firstElementChild.cloneNode(true);
+  const n = rowsEl.children.length;
+  node.querySelectorAll("input").forEach((inp) => {
+    inp.id = `${inp.name}-${n}-${Date.now()}`;
+    inp.previousElementSibling.htmlFor = inp.id;
+    inp.value = v[inp.name] ?? "";
+  });
+  node.querySelector(".btn-remove").addEventListener("click", () => {
+    if (rowsEl.children.length > 1) node.remove(); else node.querySelectorAll("input").forEach((i) => (i.value = ""));
+    save();
+  });
+  rowsEl.appendChild(node);
+}
+
+function readRows() {
+  return [...rowsEl.children].map((r) => ({
+    nom: r.querySelector('[name="nom"]').value,
+    note: r.querySelector('[name="note"]').value,
+    ects: r.querySelector('[name="ects"]').value,
+    el: r,
+  }));
+}
+
+function save() { store.set(KEY, readRows().map(({ el, ...v }) => v)); }
+
+const saved = store.get(KEY);
+(Array.isArray(saved) && saved.length ? saved : [{}, {}, {}]).forEach(addRow);
+document.getElementById("add").addEventListener("click", () => { addRow(); save(); });
+rowsEl.addEventListener("input", save);
+
+document.getElementById("form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const err = document.getElementById("error");
+  const res = document.getElementById("result");
+  let sum = 0, credits = 0, valid = 0, count = 0, bad = false;
+  readRows().forEach(({ note, ects, el }) => {
+    const n = parseNum(note), c = parseNum(ects);
+    const noteIn = el.querySelector('[name="note"]'), ectsIn = el.querySelector('[name="ects"]');
+    noteIn.removeAttribute("aria-invalid"); ectsIn.removeAttribute("aria-invalid");
+    if (note.trim() === "" && ects.trim() === "") return;
+    if (!(n >= 0 && n <= 20)) { noteIn.setAttribute("aria-invalid", "true"); bad = true; return; }
+    if (!(c > 0 && c <= 60)) { ectsIn.setAttribute("aria-invalid", "true"); bad = true; return; }
+    sum += n * c; credits += c; count++;
+    if (n >= 10) valid += c;
+  });
+  if (bad || count === 0) {
+    res.hidden = true;
+    err.hidden = false;
+    err.textContent = bad
+      ? "Une note doit être entre 0 et 20, et les crédits entre 1 et 60. Corrige les cases en rouge."
+      : "Entre au moins une note et ses crédits.";
+    return;
+  }
+  err.hidden = true;
+  const avg = sum / credits;
+  const big = document.getElementById("avg");
+  big.innerHTML = `${fmt(avg)}<span class="unit"> /20</span>`;
+  big.classList.toggle("fail", avg < 10);
+  document.getElementById("facts").innerHTML =
+    `<li>Crédits validés (10/20 ou plus) : <strong>${fmt(valid, 1)} sur ${fmt(credits, 1)}</strong></li>` +
+    `<li>Calcul sur <strong>${count}</strong> cours</li>`;
+  res.hidden = false;
+  swipe(big);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="fr-BE">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KotPlan · tous les liens</title>
+<meta name="description" content="L'app KotPlan qui planifie ton blocus, KotPlan Pro et les outils gratuits pour étudiants.">
+<link rel="canonical" href="https://kotplancontact-gif.github.io/liens/">
+<meta property="og:title" content="KotPlan · tous les liens">
+<meta property="og:description" content="Ton blocus planifié en 3 minutes. L'app est gratuite.">
+<meta property="og:image" content="https://kotplancontact-gif.github.io/assets/kotplan-icon.png">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="../assets/fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face { font-family: "Bricolage Grotesque"; src: url("../assets/fonts/bricolage-latin.woff2") format("woff2"); font-weight: 400 800; font-display: swap; }
+:root {
+  --paper: #fbfcfe; --grid: #e4ebf6; --ink: #1b3a8c; --text: #1a1f2b; --muted: #586174;
+  --card: #ffffff; --rule: #c9d6ec; --margin: #e8a3a0; --shadow: 0 1px 0 #d6deeb, 0 18px 40px -22px rgba(27, 58, 140, .45);
+  --y: #ffe94d; --p: #ff9ecb; --g: #86efac; --b: #8fd3ff;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #111726; --grid: #182033; --ink: #8fb0ff; --text: #e8ecf4; --muted: #a4adbf;
+    --card: #172036; --rule: #2b3750; --margin: #7a3b3b; --shadow: 0 1px 0 #0b101b, 0 18px 40px -22px #000;
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; min-height: 100vh; font-family: "Bricolage Grotesque", system-ui, sans-serif; color: var(--text);
+  background-color: var(--paper);
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 22px 22px;
+  display: grid; place-items: start center; padding: 40px 16px 48px;
+}
+main { width: 100%; max-width: 440px; }
+.who { display: flex; align-items: center; gap: 14px; margin: 0 0 26px 4px; }
+.who img { width: 56px; height: 56px; border-radius: 14px; box-shadow: 0 6px 16px -8px rgba(27, 58, 140, .6); }
+.who h1 { margin: 0; font-size: 1.7rem; font-weight: 800; letter-spacing: -0.02em; color: var(--ink); line-height: 1; }
+.who p { margin: 5px 0 0; color: var(--muted); font-weight: 600; font-size: 0.98rem; }
+
+/* La fiche bristol : lignes bleues, marge rouge, légère inclinaison. */
+.card {
+  position: relative; background: var(--card); border-radius: 4px; box-shadow: var(--shadow);
+  padding: 18px 18px 14px 46px; transform: rotate(-0.6deg);
+}
+.card::before { content: ""; position: absolute; top: 0; bottom: 0; left: 30px; width: 2px; background: var(--margin); }
+.card h2 { margin: 0; padding-bottom: 8px; font-size: 0.9rem; font-weight: 700; color: var(--muted); border-bottom: 1px solid var(--rule); }
+ul { list-style: none; margin: 0; padding: 0; }
+li { min-height: 70px; display: flex; align-items: center; padding: 5px 0; border-bottom: 1px solid var(--rule); }
+li:last-child { border-bottom: 0; }
+a.l {
+  --c: var(--y);
+  display: flex; align-items: center; gap: 12px; width: 100%; padding: 8px 8px; text-decoration: none; color: var(--text); border-radius: 3px;
+  background: linear-gradient(var(--c), var(--c)) no-repeat left center / 0% 100%;
+  transition: background-size 380ms cubic-bezier(.3, .7, .2, 1);
+}
+a.l:hover, a.l:focus-visible { background-size: 100% 100%; outline: none; }
+a.l:focus-visible { box-shadow: 0 0 0 3px var(--ink); }
+a.l.main { background-size: 100% 100%; }
+a.l b { display: block; font-size: 1.12rem; font-weight: 800; letter-spacing: -0.01em; color: var(--text); }
+@media (prefers-color-scheme: dark) { a.l:hover b, a.l:focus-visible b, a.l.main b { color: #1a1f2b; } a.l:hover small, a.l:focus-visible small, a.l.main small { color: #3b4354; } }
+a.l small { display: block; font-size: 0.86rem; color: var(--muted); font-weight: 600; margin-top: 1px; }
+a.l span { flex: 1; min-width: 0; }
+a.l svg { flex: none; width: 20px; height: 20px; color: var(--ink); }
+@media (prefers-color-scheme: dark) { a.l:hover svg, a.l:focus-visible svg, a.l.main svg { color: #1b3a8c; } }
+.price { flex: none; font-weight: 800; font-size: 0.86rem; color: var(--ink); padding: 3px 8px; border-radius: 999px; box-shadow: inset 0 0 0 1.6px currentColor; }
+@media (prefers-color-scheme: dark) { a.l:hover .price, a.l:focus-visible .price { color: #1b3a8c; } }
+.foot { margin: 30px 4px 0; color: var(--muted); font-size: 0.85rem; font-weight: 600; text-align: center; }
+@media (prefers-reduced-motion: reduce) { a.l { transition: none; } .card { transform: none; } }
+</style>
+</head>
+<body>
+<main>
+  <header class="who">
+    <img src="../assets/kotplan-icon.png" alt="" width="56" height="56">
+    <div><h1>KotPlan</h1><p>Ton blocus planifié en 3 minutes.</p></div>
+  </header>
+
+  <section class="card" aria-label="Liens KotPlan">
+    <h2>À ouvrir</h2>
+    <ul>
+      <li><a class="l main" href="https://kotplancontact-gif.github.io/app/">
+        <span><b>L'app KotPlan</b><small>Gratuite · ton planning en 3 min</small></span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a></li>
+      <li><a class="l" style="--c:var(--p)" href="https://kotplan.gumroad.com/l/kotplan-pro">
+        <span><b>KotPlan Pro</b><small>Cours illimités, stats, agenda</small></span>
+        <em class="price">4,99 €</em></a></li>
+      <li><a class="l" style="--c:var(--g)" href="https://kotplancontact-gif.github.io/">
+        <span><b>Outils gratuits</b><small>Moyenne, note à viser, J−X</small></span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a></li>
+      <li><a class="l" style="--c:var(--b)" href="https://kotplan.gumroad.com/">
+        <span><b>La boutique</b><small>Tous les produits</small></span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a></li>
+    </ul>
+  </section>
+
+  <p class="foot">Sans compte · tes données restent sur ton téléphone</p>
+</main>
+</body>
+</html>

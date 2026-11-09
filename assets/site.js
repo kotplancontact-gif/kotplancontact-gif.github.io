@@ -1,6 +1,6 @@
 // Réglages communs à toutes les pages.
-// KIT_URL : lien Gumroad du Kit Blocus. Tant qu'il est vide, l'encart du kit est masqué.
-const KIT_URL = "https://kotplan.gumroad.com/l/kit-blocus";
+// KIT_URL : lien de l'encart de promotion (l'app KotPlan). S'il est vide, l'encart est masqué.
+const KIT_URL = "https://kotplancontact-gif.github.io/app/";
 
 document.querySelectorAll("[data-kit]").forEach((a) => {
   if (KIT_URL) a.href = KIT_URL;

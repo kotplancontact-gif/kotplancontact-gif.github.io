@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="fr-FR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Planning de révisions gratuit (partiels, BTS, bac) · KotPlan</title>
+<meta name="description" content="Entre tes dates d'examen : KotPlan crée ton planning de révisions jour par jour et le recalcule quand tu sautes une séance. Pomodoro intégré. Gratuit, sans compte, hors-ligne.">
+<link rel="canonical" href="https://kotplancontact-gif.github.io/revisions/">
+<meta property="og:title" content="Ton planning de révisions, fait en 2 minutes">
+<meta property="og:description" content="Entre tes examens, KotPlan répartit tes révisions et replanifie tout quand tu sautes une séance. Gratuit.">
+<meta property="og:image" content="https://kotplancontact-gif.github.io/assets/kotplan-phone-fr.webp">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="../assets/fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossorigin>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"KotPlan","applicationCategory":"EducationalApplication","operatingSystem":"Web, iOS, Android",
+ "offers":[{"@type":"Offer","price":"0","priceCurrency":"EUR"},{"@type":"Offer","price":"4.99","priceCurrency":"EUR","name":"KotPlan Pro"}],
+ "description":"Planning de révisions automatique : répartit les révisions jour par jour selon les dates d'examen et le recalcule quand une séance est sautée."}
+</script>
+<style>
+@font-face { font-family: "Bricolage Grotesque"; src: url("../assets/fonts/bricolage-latin.woff2") format("woff2"); font-weight: 400 800; font-display: swap; }
+:root {
+  --paper: #fbfcfe; --grid: #e4ebf6; --ink: #1b3a8c; --text: #1a1f2b; --muted: #586174; --line: #d3dceb;
+  --y: #ffe94d; --p: #ff9ecb; --g: #86efac; --b: #8fd3ff; --card: #fff;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --paper: #111726; --grid: #182033; --ink: #8fb0ff; --text: #e8ecf4; --muted: #a4adbf; --line: #2b3750; --card: #172036; color-scheme: dark; }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; font-family: "Bricolage Grotesque", system-ui, sans-serif; color: var(--text); line-height: 1.55;
+  background-color: var(--paper);
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+.wrap { max-width: 1040px; margin: 0 auto; padding: 0 20px; }
+header.top { padding: 18px 0; }
+.brand { font-weight: 800; font-size: 1.3rem; color: var(--ink); text-decoration: none; }
+.hl { background: linear-gradient(transparent 12%, var(--c, var(--y)) 12%, var(--c, var(--y)) 90%, transparent 90%); padding: 0 .12em; border-radius: 4px; color: #1a1f2b; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.hero { display: grid; grid-template-columns: 1.1fr .9fr; gap: 32px; align-items: center; padding-block: 26px 40px; }
+h1 { font-size: clamp(2.3rem, 6vw, 3.9rem); line-height: 1.02; letter-spacing: -0.03em; margin: 0 0 18px; color: var(--ink); font-weight: 800; }
+.lede { font-size: 1.18rem; color: var(--muted); max-width: 34em; margin: 0 0 26px; }
+.cta { display: inline-flex; align-items: center; gap: 10px; background: var(--ink); color: #fff; font-weight: 800; font-size: 1.15rem; padding: 16px 26px; border-radius: 14px; text-decoration: none; box-shadow: 0 10px 24px -12px rgba(27, 58, 140, .8); }
+@media (prefers-color-scheme: dark) { .cta { color: #111726; } }
+.cta:focus-visible { outline: 3px solid var(--y); outline-offset: 3px; }
+.small { color: var(--muted); font-size: .95rem; margin: 12px 0 0; }
+.hero img { width: 100%; max-width: 400px; height: auto; display: block; margin: 0 auto; }
+section { padding: 36px 0; }
+h2 { font-size: clamp(1.6rem, 3.5vw, 2.2rem); letter-spacing: -0.02em; margin: 0 0 22px; line-height: 1.1; }
+.steps { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; counter-reset: s; }
+.steps li { background: var(--card); border-radius: 12px; padding: 20px; box-shadow: 0 1px 0 var(--line), 0 14px 30px -24px rgba(27, 58, 140, .5); counter-increment: s; }
+.steps li::before { content: counter(s); display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--y); color: #1a1f2b; font-weight: 800; margin-bottom: 10px; }
+.steps b { display: block; font-size: 1.15rem; margin-bottom: 4px; }
+.steps p { margin: 0; color: var(--muted); }
+.split { display: grid; grid-template-columns: .9fr 1.1fr; gap: 32px; align-items: center; }
+.split img { width: 100%; max-width: 380px; height: auto; display: block; margin: 0 auto; }
+.points { list-style: none; padding: 0; margin: 0; }
+.points li { padding: 14px 0; border-bottom: 1px dashed var(--line); }
+.points li:last-child { border: 0; }
+.points b { font-size: 1.12rem; }
+.points p { margin: 4px 0 0; color: var(--muted); }
+.faq details { background: var(--card); border-radius: 10px; padding: 14px 18px; margin: 0 0 10px; box-shadow: 0 1px 0 var(--line); }
+.faq summary { font-weight: 700; cursor: pointer; font-size: 1.08rem; }
+.faq p { margin: 10px 0 2px; color: var(--muted); }
+.end { text-align: center; padding-block: 50px 60px; }
+footer { border-top: 1px solid var(--line); padding: 22px 0 40px; color: var(--muted); font-size: .92rem; }
+footer a { color: var(--ink); }
+@media (max-width: 760px) {
+  .hero, .split { grid-template-columns: 1fr; }
+  .hero img { max-width: 300px; }
+  .split img { order: 2; max-width: 300px; }
+  .steps { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><a class="brand" href="https://kotplancontact-gif.github.io/">KotPlan</a></div></header>
+
+<main>
+  <div class="wrap hero">
+    <div>
+      <h1>Ton planning de révisions, fait en <span class="hl">2 minutes</span>.</h1>
+      <p class="lede">Entre tes dates de partiels ou d'examens. KotPlan répartit tes révisions jour par jour, te dit quoi travailler maintenant, et recalcule tout dès que tu sautes une séance.</p>
+      <a class="cta" href="https://kotplancontact-gif.github.io/app/?pays=fr">Créer mon planning gratuit</a>
+      <p class="small">Sans compte, sans pub. Tes données restent sur ton téléphone.</p>
+    </div>
+    <img src="../assets/kotplan-phone-fr.webp" width="412" height="803" alt="Écran Aujourd'hui de KotPlan : ce matin, 3 h de Mathématiques, puis Microéconomie et Statistique">
+  </div>
+
+  <section>
+    <div class="wrap">
+      <h2>Comment ça marche</h2>
+      <ol class="steps">
+        <li><b>Tu entres tes examens</b><p>Date, coefficient et difficulté de chaque matière. Une minute par matière.</p></li>
+        <li><b>Tu choisis tes créneaux</b><p>Matin, après-midi, soir, jours de repos, jours où tu as encore cours.</p></li>
+        <li><b>Ton planning est prêt</b><p>Chaque jour, KotPlan te dit quelle matière réviser et combien de temps.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap split">
+      <img src="../assets/kotplan-planning-fr.webp" width="412" height="803" alt="Planning de KotPlan : chaque jour découpé en créneaux colorés par matière" loading="lazy">
+      <div>
+        <h2>Mieux qu'un planning sur papier</h2>
+        <ul class="points">
+          <li><b>Il se recalcule tout seul.</b><p>Une séance ratée ? Les heures sont replacées sur les jours suivants. Plus besoin de tout refaire à 23 h.</p></li>
+          <li><b>Les matières difficiles passent en premier.</b><p>Plus de temps pour les matières à gros coefficient, et la veille de chaque examen réservée à la bonne matière.</p></li>
+          <li><b>Pomodoro intégré.</b><p>Lance un minuteur depuis le créneau, ton temps de travail réel est compté par matière.</p></li>
+          <li><b>Fonctionne hors-ligne.</b><p>Installe-la sur l'écran d'accueil comme une vraie app. Pas de compte à créer.</p></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq">
+    <div class="wrap">
+      <h2>Questions fréquentes</h2>
+      <details><summary>C'est vraiment gratuit ?</summary><p>Oui, pour 3 matières, avec le planning complet, le Pomodoro et les stats de la semaine. KotPlan Pro (4,99 €, une seule fois, pas d'abonnement) débloque les matières illimitées, les stats complètes et l'export vers Google Agenda.</p></details>
+      <details><summary>Ça marche pour le bac, le BTS ou les partiels de fac ?</summary><p>Oui. Tu indiques le coefficient (ou les ECTS) de chaque matière : plus il est élevé, plus la matière reçoit d'heures.</p></details>
+      <details><summary>Où sont stockées mes données ?</summary><p>Uniquement dans ton navigateur, sur ton appareil. Rien n'est envoyé sur un serveur. Tu peux télécharger une sauvegarde depuis les réglages.</p></details>
+      <details><summary>Comment l'installer sur iPhone ou Android ?</summary><p>Ouvre l'app dans Safari ou Chrome, puis « Partager » → « Sur l'écran d'accueil » (iPhone) ou « Installer l'application » (Android).</p></details>
+    </div>
+  </section>
+
+  <div class="wrap end">
+    <h2>Tes partiels approchent. <span class="hl" style="--c:var(--g)">Ton planning est prêt</span> dans 2 minutes.</h2>
+    <a class="cta" href="https://kotplancontact-gif.github.io/app/?pays=fr">Créer mon planning gratuit</a>
+  </div>
+</main>
+
+<footer><div class="wrap">KotPlan · <a href="https://kotplancontact-gif.github.io/">outils gratuits pour étudiants</a> · <a href="https://kotplancontact-gif.github.io/liens/">tous les liens</a></div></footer>
+</body>
+</html>
